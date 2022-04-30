@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>freenove_ros</name>
+  <version>0.0.0</version>
+  <description>The freenove_ros package</description>
+  <maintainer email="zacharykratochvil@gmail.com">Zachary Kratochvil</maintainer>
+  <license>Creative Commons Attribution-NonCommercial-ShareAlike 3.0</license>
+  <author email="zachary.kratochvil@gmail.com">Zachary Kratochvil</author>
+
+  <depend>std_msgs</depend>
+  <depend>rospy</depend>
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <export>
+  </export>
+</package>
