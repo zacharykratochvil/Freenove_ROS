@@ -47,6 +47,7 @@ add_message_files(
   msg
   FILES
   AmbientLight.msg
+  OnOffDuration.msg
 )
 
 ## Generate services in the 'srv' folder
