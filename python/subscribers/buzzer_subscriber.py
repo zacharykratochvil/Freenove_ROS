@@ -1,44 +1,69 @@
+#!/usr/bin/python
+########################
+# Copywrite Zachary Kratochvil 2022
+# All rights reserved.
+########################
+
 import threading
+import rospy
 import RPi.GPIO as GPIO
-from Command import COMMAND as cmd
 from freenove_ros.msg import OnOffDuration
 
 
+# original code from Freenove
 class Buzzer:
     def __init__(self):
         GPIO.setwarnings(False)
-        Buzzer_Pin = 17
+        self.Buzzer_Pin = 17
         GPIO.setmode(GPIO.BCM)
-        GPIO.setup(Buzzer_Pin,GPIO.OUT)
+        GPIO.setup(self.Buzzer_Pin,GPIO.OUT)
 
     def run(self,command):
         if command!="0":
-            GPIO.output(Buzzer_Pin,True)
+            GPIO.output(self.Buzzer_Pin,True)
         else:
-            GPIO.output(Buzzer_Pin,False)
+            GPIO.output(self.Buzzer_Pin,False)
     
 
+# ROS implementation
 class Buzzer_Sub:
     def __init__(self):
         self.buzz = Buzzer()
+        self.timer = threading.Timer(0, None)
+        self.sleep = False
 
     def start(self):
         rospy.init_node('buzzer_subscriber', anonymous=False)
-        rospy.Subscriber("buzzer", String, self.callback)
+        rospy.Subscriber("buzzer", OnOffDuration, self.callback)
         rospy.spin()
 
     def callback(self, data):
-        if data.on:
+
+        # turn buzzer on for specified duration
+        if data.on and not self.sleep:
             self.buzz.run("1")
 
             # handle duration with new requests overriding
             self.timer.cancel()
             self.timer = threading.Timer(data.duration, self.callback,
-                args=OnOffDuration(False, 0))
+                args=[OnOffDuration(False, 0)])
             self.timer.start()
 
-        else:
+        # suppress buzzer for specified duration
+        elif not data.on and data.duration > 0:
+            self.sleep = True
+
+            self.timer.cancel()
+            self.timer = threading.Timer(data.duration, self.end_sleep)
+            self.timer.start()
+
+        # turn off buzzer for now
+        elif not data.on:
             self.buzz.run("0")
+
+    
+    def end_sleep(self):
+        self.sleep = False
 
 
 if __name__ == "__main__":

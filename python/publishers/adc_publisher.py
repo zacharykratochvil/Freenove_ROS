@@ -7,7 +7,7 @@ import rospy
 import argparse
 import sys
 
-from interfaces import ADC
+from freenove_ros.interfaces import ADC
 
 from std_msgs.msg import Float32
 from freenove_ros.msg import AmbientLight
