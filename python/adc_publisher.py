@@ -3,12 +3,19 @@
 # Copywrite Zachary Kratochvil 2022
 # All rights reserved.
 ########################
-import rospy
+
+# python imports
 import argparse
 import sys
+import time
 
-from freenove_ros.interfaces import ADC
+# ros imports
+import rospy
 
+# local imports
+from interfaces import ADC
+
+# message imports
 from std_msgs.msg import Float32
 from freenove_ros.msg import AmbientLight
 
@@ -48,7 +55,8 @@ class ADC_ROS():
 			if self.light:
 				left = self.adc.recvADC(0)/self.V_max
 				right = self.adc.recvADC(1)/self.V_max
-				self.lightPub.publish(left=left, right=right)
+				timestamp = rospy.Time.now()
+				self.lightPub.publish(left=left, right=right, timestamp=timestamp)
 			
 			if self.battery:
 				level = self.adc.recvADC(2)*3
@@ -58,7 +66,7 @@ class ADC_ROS():
 
 
 	def initPub(self, name, msg_type):
-		return rospy.Publisher(name, msg_type, queue_size=1)
+		return rospy.Publisher(name, msg_type, queue_size=10)
 		
 
 if __name__ == "__main__":
@@ -69,7 +77,7 @@ if __name__ == "__main__":
 		help="publish battery level recordings")
 	parser.add_argument("--rate", type=int, default=60,
 		help="rate to publish (Hz)")
-	args = parser.parse_args()
+	args = parser.parse_args(rospy.myargv()[1:])
 
 	if not (args.light or args.battery):
 		args.light = True

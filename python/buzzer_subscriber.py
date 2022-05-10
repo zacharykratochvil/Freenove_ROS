@@ -5,8 +5,8 @@
 ########################
 
 import threading
-import rospy
 import RPi.GPIO as GPIO
+import rospy
 from freenove_ros.msg import OnOffDuration
 
 

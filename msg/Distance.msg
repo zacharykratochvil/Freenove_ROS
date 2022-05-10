@@ -1,3 +1,2 @@
-float32 left
-float32 right
+float32 cm # distance in cm
 time timestamp #timestamp in seconds
