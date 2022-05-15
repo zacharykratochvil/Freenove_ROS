@@ -34,7 +34,7 @@ project(freenove_ros)
 ##     * add a exec_depend tag for "message_runtime"
 ## * In this file (CMakeLists.txt):
 ##   * add "message_generation" and every package in MSG_DEP_SET to
-find_package(catkin REQUIRED COMPONENTS rospy std_msgs message_generation)
+find_package(catkin REQUIRED COMPONENTS rospy geometry_msgs message_generation)
 ##   * add "message_runtime" and every package in MSG_DEP_SET to
 ##   * uncomment the add_*_files sections below as needed
 ##     and list every .msg/.srv/.action file to be processed
@@ -48,7 +48,9 @@ add_message_files(
   FILES
   AmbientLight.msg
   OnOffDuration.msg
-  Distance.msg
+  SensorDistance.msg
+  TwistDuration.msg
+  DriveDuration.msg
 )
 
 ## Generate services in the 'srv' folder
@@ -68,7 +70,7 @@ add_message_files(
 ## Generate added messages and services with any dependencies listed here
 generate_messages(
   DEPENDENCIES
-  std_msgs  # Or other packages containing msgs
+  geometry_msgs  # Or other packages containing msgs
 )
 
 ################################################

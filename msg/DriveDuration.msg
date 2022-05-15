@@ -1,0 +1,5 @@
+float32 power_front_left
+float32 power_front_right
+float32 power_back_left
+float32 power_back_right
+float32 duration

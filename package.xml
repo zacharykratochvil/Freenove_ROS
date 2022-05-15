@@ -7,7 +7,7 @@
   <license>Creative Commons Attribution-NonCommercial-ShareAlike 3.0</license>
   <author email="zachary.kratochvil@gmail.com">Zachary Kratochvil</author>
 
-  <depend>std_msgs</depend>
+  <depend>geometry_msgs</depend>
   <depend>rospy</depend>
 
   <build_depend>message_generation</build_depend>

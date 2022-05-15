@@ -15,7 +15,7 @@ import rospy
 from interfaces import Ultrasonic
 
 # message imports
-from freenove_ros.msg import Distance
+from freenove_ros.msg import SensorDistance
 
 
 class Ultrasonic_ROS():
@@ -24,7 +24,7 @@ class Ultrasonic_ROS():
 
 		# initialize publishers
 		self.ultraPub = rospy.Publisher("ultrasonic_distance",
-										Distance, queue_size=10)
+										SensorDistance, queue_size=10)
 
 		# initialize node
 		rospy.init_node("ultrasonic_publisher", anonymous=False)

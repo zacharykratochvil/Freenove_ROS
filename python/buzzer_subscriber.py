@@ -67,7 +67,12 @@ class Buzzer_Sub:
 
 
 if __name__ == "__main__":
-    Buzzer_Sub().start()
+    buzzer = None
+    try:
+        buzzer=Buzzer_Sub()
+        buzzer.start()
+    finally:
+        buzzer.buzz.run("0")
 
 
 

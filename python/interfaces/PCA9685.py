@@ -29,6 +29,7 @@ class PCA9685:
     self.bus = smbus.SMBus(1)
     self.address = address
     self.debug = debug
+    self.lock = False
     self.write(self.__MODE1, 0x00)
     
   def write(self, reg, value):
@@ -57,14 +58,29 @@ class PCA9685:
     time.sleep(0.005)
     self.write(self.__MODE1, oldmode | 0x80)
 
-  def setPWM(self, channel, on, off):
-    "Sets a single PWM channel"
-    self.write(self.__LED0_ON_L+4*channel, on & 0xFF)
-    self.write(self.__LED0_ON_H+4*channel, on >> 8)
-    self.write(self.__LED0_OFF_L+4*channel, off & 0xFF)
-    self.write(self.__LED0_OFF_H+4*channel, off >> 8)
+  def setPWM(self, channel, on, off, retries=100):
+    while(self.lock == True):
+      time.sleep(.001)
+    self.lock = True
+
+    for i in range(retries):
+      "Sets a single PWM channel"
+      self.write(self.__LED0_ON_L+4*channel, on & 0xFF)
+      self.write(self.__LED0_ON_H+4*channel, on >> 8)
+      self.write(self.__LED0_OFF_L+4*channel, off & 0xFF)
+      self.write(self.__LED0_OFF_H+4*channel, off >> 8)
+
+      "checks write's success and returns from function if valid"
+      low = self.read(self.__LED0_OFF_L+4*channel)
+      high = self.read(self.__LED0_OFF_H+4*channel)
+      check_off = low + high*0x100
+      if check_off == off:
+        self.lock = False
+        return
+
   def setMotorPwm(self,channel,duty):
     self.setPWM(channel,0,duty)
+
   def setServoPulse(self, channel, pulse):
     "Sets the Servo Pulse,The PWM frequency must be 50HZ"
     pulse = pulse*4096/20000        #PWM frequency is 50HZ,the period is 20000us
