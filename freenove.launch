@@ -1,0 +1,10 @@
+<launch>
+	<include file="$(find raspicam_node)/launch/camerav2_1280x720.launch" />
+
+	<node name="adc_publisher" pkg="freenove_ros" type="adc_publisher.py"/>
+	<node name="ultrasonic_publisher" pkg="freenove_ros" type="ultrasonic_publisher.py"/>
+
+	<node name="buzzer_subscriber" pkg="freenove_ros" type="buzzer_subscriber.py"/>
+	<node name="motor_subscriber" pkg="freenove_ros" type="motor_subscriber.py"/>	
+	
+</launch>
