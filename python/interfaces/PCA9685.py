@@ -25,12 +25,19 @@ class PCA9685:
   __ALLLED_OFF_L       = 0xFC
   __ALLLED_OFF_H       = 0xFD
 
+  # static self.lock preventing simultaneous writes
+  lock = False
+  bus = smbus.SMBus(1)
+
   def __init__(self, address=0x40, debug=False):
-    self.bus = smbus.SMBus(1)
     self.address = address
     self.debug = debug
-    self.lock = False
+
+    while self.lock:
+      sleep(.001)
+    self.lock = True
     self.write(self.__MODE1, 0x00)
+    self.lock = False
     
   def write(self, reg, value):
     "Writes an 8-bit value to the specified register/address"
@@ -50,6 +57,10 @@ class PCA9685:
     prescale = math.floor(prescaleval + 0.5)
 
 
+    while self.lock:
+      sleep(.001)
+    self.lock = True
+    
     oldmode = self.read(self.__MODE1);
     newmode = (oldmode & 0x7F) | 0x10        # sleep
     self.write(self.__MODE1, newmode)        # go to sleep
@@ -57,6 +68,8 @@ class PCA9685:
     self.write(self.__MODE1, oldmode)
     time.sleep(0.005)
     self.write(self.__MODE1, oldmode | 0x80)
+
+    self.lock = False
 
   def setPWM(self, channel, on, off, retries=100):
     while(self.lock == True):

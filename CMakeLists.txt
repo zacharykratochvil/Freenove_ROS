@@ -51,6 +51,7 @@ add_message_files(
   SensorDistance.msg
   TwistDuration.msg
   DriveDuration.msg
+  ServoAngle.msg
 )
 
 ## Generate services in the 'srv' folder

@@ -1,5 +1,5 @@
 #!/usr/bin/python
-# from original Freenove code
+# from original Freenove code with small modifications
 
 import time
 from .PCA9685 import PCA9685
@@ -7,6 +7,7 @@ class Motor:
     def __init__(self):
         self.pwm = PCA9685(0x40, debug=True)
         self.pwm.setPWMFreq(50)
+        self.setMotorModel(0,0,0,0)
 
     def duty_range(self,duty1,duty2,duty3,duty4):
 
