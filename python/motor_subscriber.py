@@ -32,18 +32,22 @@ class Motor_Sub:
 
         # validate inputs, note that in the freenove code in interfaces it must be > .12 to send any power
         def validate(number, channel):
-            if not (0 <= number <= 1):
-                raise Exception(f"Invalid DriveDuration message. Power {number} on channel {channel} must be between 0 and 1.")
+            clipped_power = number
+            if not (-1 <= number <= 1):
+                clipped_power = min(1, max(-1, number))
+                raise Warning(f"Invalid DriveDuration message. Power {number} on channel {channel} must be between -1 and 1."
+                    + f" Setting power to {clipped_power}.")
+            return clipped_power
 
-        validate(data.power_front_left)
-        validate(data.power_front_right)
-        validate(data.power_back_left)
-        validate(data.power_back_right)
+        data.power_front_left = validate(data.power_front_left, "front left")
+        data.power_front_right = validate(data.power_front_right, "front right")
+        data.power_back_left = validate(data.power_back_left, "back left")
+        data.power_back_right = validate(data.power_back_right, "back right")
 
         # update state and apply power to motors 
-        self.motors.setMotorModel(data.power_front_left*self.MOTOR_MAX,
-                                data.power_front_right*self.MOTOR_MAX,
+        self.motors.setMotorModel(-data.power_front_left*self.MOTOR_MAX,
                                 data.power_back_left*self.MOTOR_MAX,
+                                data.power_front_right*self.MOTOR_MAX,
                                 data.power_back_right*self.MOTOR_MAX)
 
         # handle duration with new requests overriding
