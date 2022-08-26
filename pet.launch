@@ -1,0 +1,9 @@
+<launch>
+	<include file="$(find freenove_ros)/freenove.launch" />
+	<include file="$(find respeaker_ros)/launch/respeaker.launch" />
+	<include file="$(find witmotion_ros)/launch/witmotion.launch" />
+	
+	<node name="legs" pkg="pet" type="legs.py"/>
+	<node name="commands" pkg="pet" type="commands.py"/>
+
+</launch>
