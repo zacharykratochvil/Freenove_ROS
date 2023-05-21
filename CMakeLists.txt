@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.0.2)
 project(freenove_ros)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
-# add_compile_options(-std=c++11)
+add_compile_options(-Wall -pthread)#-std=C++11)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -34,7 +34,7 @@ project(freenove_ros)
 ##     * add a exec_depend tag for "message_runtime"
 ## * In this file (CMakeLists.txt):
 ##   * add "message_generation" and every package in MSG_DEP_SET to
-find_package(catkin REQUIRED COMPONENTS rospy geometry_msgs message_generation)
+find_package(catkin REQUIRED COMPONENTS rospy geometry_msgs message_generation roscpp)
 ##   * add "message_runtime" and every package in MSG_DEP_SET to
 ##   * uncomment the add_*_files sections below as needed
 ##     and list every .msg/.srv/.action file to be processed
@@ -72,6 +72,7 @@ add_message_files(
 generate_messages(
   DEPENDENCIES
   geometry_msgs  # Or other packages containing msgs
+  roscpp
 )
 
 ################################################
@@ -106,7 +107,7 @@ generate_messages(
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES freenove_ros
-   CATKIN_DEPENDS message_runtime
+   CATKIN_DEPENDS message_runtime roscpp
 #  DEPENDS system_lib
 )
 
@@ -118,13 +119,14 @@ catkin_package(
 ## Your package locations should be listed before other locations
 include_directories(
 # include
-# ${catkin_INCLUDE_DIRS}
+ ${PROJECT_SOURCE_DIR}/src/gpio-master
+ ${catkin_INCLUDE_DIRS}
 )
 
 ## Declare a C++ library
-# add_library(${PROJECT_NAME}
-#   src/${PROJECT_NAME}/freenove_ros.cpp
-# )
+#add_library(#${PROJECT_NAME}
+#   
+#)
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
@@ -134,7 +136,7 @@ include_directories(
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-# add_executable(${PROJECT_NAME}_node src/freenove_ros_node.cpp)
+ add_executable(${PROJECT_NAME}_ultrasonic_pub ${PROJECT_SOURCE_DIR}/src/ultrasonic_publisher.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -144,12 +146,15 @@ include_directories(
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
+#add_dependencies(${PROJECT_NAME}_ultrasonic_pub ${PROJECT_SOURCE_DIR}/src/pigpio-master)
 # add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
-# target_link_libraries(${PROJECT_NAME}_node
-#   ${catkin_LIBRARIES}
-# )
+target_link_libraries(${PROJECT_NAME}_ultrasonic_pub
+   ${catkin_LIBRARIES}
+   pigpio
+   rt
+ )
 
 #############
 ## Install ##

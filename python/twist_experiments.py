@@ -2,6 +2,9 @@
 
 # used to conduct experiments to calculate coefficients
 # of friction and damping
+#
+# run roslaunch freenove_ros freenove.launch in one terminal
+# then run rosrun freenove_ros twist_experiments.py in another
 
 import rospy
 from collections import deque
@@ -23,8 +26,8 @@ class Tests:
 		print("ready? (q or x to quit, any other key to go)")
 		while(input() not in {"q", "x", "Q", "quit", "exit"}):
 			seconds = 1.5*(np.random.rand()+.25) #[.25 to 1.75]
-			power_left = np.random.rand()*1.6 - .8 # [-.6 to .6]
-			power_right = np.random.rand()*1.6 - .8 # [-.6 to .6]
+			power_left = np.random.rand()*2 - 1 # [-1 to 1]
+			power_right = np.random.rand()*2 - 1 # [-1 to 1]
 			volts = np.mean(self.readings)
 			print("power_left\tpower_right\tseconds\tbattery")
 			print(f"{power_left}\t{power_right}\t{seconds}\t{volts}")

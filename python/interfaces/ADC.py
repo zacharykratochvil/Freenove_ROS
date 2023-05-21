@@ -27,8 +27,14 @@ class Adc:
                 self.Index="ADS7830" 
     def analogReadPCF8591(self,chn):#PCF8591 read ADC value,chn:0,1,2,3
         value=[0,0,0,0,0,0,0,0,0]
-        for i in range(9):
-            value[i] = self.bus.read_byte_data(self.ADDRESS,self.PCF8591_CMD+chn)
+        try:
+            for i in range(9):
+                value[i] = self.bus.read_byte_data(self.ADDRESS,self.PCF8591_CMD+chn)
+        except:
+            raise Warning("Error reading ADC.")
+            time.sleep(.001)
+            return self.analogReadPCF8591(chn)
+
         value=sorted(value)
         return value[4]   
         
@@ -47,7 +53,12 @@ class Adc:
     def recvADS7830(self,channel):
         """Select the Command data from the given provided value above"""
         COMMAND_SET = self.ADS7830_CMD | ((((channel<<2)|(channel>>1))&0x07)<<4)
-        self.bus.write_byte(self.ADDRESS,COMMAND_SET)
+        try:
+            self.bus.write_byte(self.ADDRESS,COMMAND_SET)
+        except:
+            raise Warning("Error writing to ADC.")
+            return self.recvADS7830(channel)
+        
         while(1):
             value1 = self.bus.read_byte(self.ADDRESS)
             value2 = self.bus.read_byte(self.ADDRESS)
