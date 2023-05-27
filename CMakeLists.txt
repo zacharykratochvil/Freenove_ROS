@@ -34,7 +34,7 @@ add_compile_options(-Wall -pthread)#-std=C++11)
 ##     * add a exec_depend tag for "message_runtime"
 ## * In this file (CMakeLists.txt):
 ##   * add "message_generation" and every package in MSG_DEP_SET to
-find_package(catkin REQUIRED COMPONENTS rospy geometry_msgs message_generation roscpp)
+find_package(catkin REQUIRED COMPONENTS rospy geometry_msgs message_generation roscpp rosout)
 ##   * add "message_runtime" and every package in MSG_DEP_SET to
 ##   * uncomment the add_*_files sections below as needed
 ##     and list every .msg/.srv/.action file to be processed
@@ -107,7 +107,7 @@ generate_messages(
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES freenove_ros
-   CATKIN_DEPENDS message_runtime roscpp
+   CATKIN_DEPENDS message_runtime roscpp rosout
 #  DEPENDS system_lib
 )
 
@@ -124,19 +124,20 @@ include_directories(
 )
 
 ## Declare a C++ library
-#add_library(#${PROJECT_NAME}
+add_library(${PROJECT_NAME}_ultrasonic_pub
+  ${PROJECT_SOURCE_DIR}/src/ultrasonic_publisher.cpp
 #   
-#)
+)
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
 ## either from message generation or dynamic reconfigure
-# add_dependencies(${PROJECT_NAME} ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(${PROJECT_NAME}_ultrasonic_pub ${catkin_EXPORTED_TARGETS} ${${PROJECT_NAME}_EXPORTED_TARGETS})
 
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
- add_executable(${PROJECT_NAME}_ultrasonic_pub ${PROJECT_SOURCE_DIR}/src/ultrasonic_publisher.cpp)
+#add_executable(${PROJECT_NAME}_ultrasonic_pub ${PROJECT_SOURCE_DIR}/src/ultrasonic_publisher.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
